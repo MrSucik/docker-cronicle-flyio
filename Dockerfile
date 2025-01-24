@@ -7,8 +7,6 @@ RUN tar zxvf /tmp/Cronicle-${CRONICLE_VERSION}.tar.gz -C /tmp/ && \
     mv /tmp/Cronicle-${CRONICLE_VERSION}/* . && \
     rm -rf /tmp/* && \
     yarn
-COPY ./patches /tmp/patches
-RUN patch -p3 < /tmp/patches/engine.patch lib/engine.js
 COPY docker-entrypoint.js ./bin/
 
 
@@ -19,7 +17,8 @@ WORKDIR /opt/cronicle
 ENV CRONICLE_foreground=1
 ENV CRONICLE_echo=1
 ENV CRONICLE_color=1
-ENV debug_level=1
+ENV debug_level=9
 ENV HOSTNAME=main
+ENV CRONICLE_Storage__Filesystem__base_dir=/data/cronicle
 RUN node bin/build.js dist && bin/control.sh setup
 CMD ["node", "bin/docker-entrypoint.js"]
